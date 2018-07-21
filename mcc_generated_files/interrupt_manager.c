@@ -60,17 +60,17 @@ void interrupt INTERRUPT_InterruptManager (void)
     // interrupt handler
     if(INTCONbits.PEIE == 1)
     {
-        if(PIE1bits.TX1IE == 1 && PIR1bits.TX1IF == 1)
+        if(PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1)
+        {
+            TMR1_ISR();
+        } 
+        else if(PIE1bits.TX1IE == 1 && PIR1bits.TX1IF == 1)
         {
             EUSART1_TxDefaultInterruptHandler();
         } 
         else if(PIE1bits.RC1IE == 1 && PIR1bits.RC1IF == 1)
         {
             EUSART1_RxDefaultInterruptHandler();
-        } 
-        else if(PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1)
-        {
-            TMR1_ISR();
         } 
         else
         {

@@ -49,7 +49,7 @@
 // CONFIG1L
 #pragma config WDTEN = OFF    // Watchdog Timer->Disabled - Controlled by SWDTEN bit
 #pragma config PLLDIV = 1    // 96MHz PLL Prescaler Selection (PLLSEL=0)->No prescale (4 MHz oscillator input drives PLL directly)
-#pragma config CFGPLLEN = ON    // PLL Enable Configuration Bit->PLL Enabled
+#pragma config CFGPLLEN = OFF    // PLL Enable Configuration Bit->PLL Disabled
 #pragma config STVREN = ON    // Stack Overflow/Underflow Reset->Enabled
 #pragma config XINST = OFF    // Extended Instruction Set->Disabled
 
@@ -57,7 +57,7 @@
 #pragma config CP0 = OFF    // Code Protect->Program memory is not code-protected
 
 // CONFIG2L
-#pragma config OSC = INTOSCPLL    // Oscillator->INTOSCPLL
+#pragma config OSC = INTOSC    // Oscillator->INTOSC
 #pragma config SOSCSEL = DIG    // T1OSC/SOSC Power Selection Bits->Digital (SCLKI) mode selected
 #pragma config CLKOEC = OFF    // EC Clock Out Enable Bit ->CLKO output disabled on the RA6 pin
 #pragma config FCMEN = ON    // Fail-Safe Clock Monitor->Enabled

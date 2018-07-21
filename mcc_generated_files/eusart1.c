@@ -48,13 +48,14 @@
   Section: Included Files
 */
 #include "eusart1.h"
+#include "string.h"
 
 /**
   Section: Macro Declarations
 */
 
 #define EUSART1_TX_BUFFER_SIZE 64
-#define EUSART1_RX_BUFFER_SIZE 64
+#define EUSART1_RX_BUFFER_SIZE 200
 
 /**
   Section: Global Variables
@@ -68,6 +69,8 @@ volatile uint8_t eusart1RxHead = 0;
 volatile uint8_t eusart1RxTail = 0;
 volatile uint8_t eusart1RxBuffer[EUSART1_RX_BUFFER_SIZE];
 volatile uint8_t eusart1RxCount;
+
+extern uint8_t volatile readBuffer;
 
 /**
   Section: EUSART1 APIs
@@ -91,7 +94,7 @@ void EUSART1_Initialize(void)
     TXSTA1 = 0x24;
 
     // 
-    SPBRG1 = 0x44;
+    SPBRG1 = 0x10;
 
     // 
     SPBRGH1 = 0x00;
@@ -168,15 +171,6 @@ void EUSART1_Write(uint8_t txData)
     PIE1bits.TX1IE = 1;
 }
 
-char getch(void)
-{
-    return EUSART1_Read();
-}
-
-void putch(char txData)
-{
-    EUSART1_Write(txData);
-}
 
 void EUSART1_Transmit_ISR(void)
 {
@@ -196,6 +190,13 @@ void EUSART1_Transmit_ISR(void)
         PIE1bits.TX1IE = 0;
     }
 }
+uint8_t bytesToRead = 0;
+void readRxBuffer(uint8_t *outData)
+{
+    memcpy(outData, eusart1RxBuffer, bytesToRead);
+    memset(eusart1RxBuffer, 0, EUSART1_RX_BUFFER_SIZE);
+    
+}
 
 void EUSART1_Receive_ISR(void)
 {
@@ -210,6 +211,13 @@ void EUSART1_Receive_ISR(void)
 
     // buffer overruns are ignored
     eusart1RxBuffer[eusart1RxHead++] = RCREG1;
+    if(eusart1RxBuffer[eusart1RxHead-1] == '\n'){
+        readBuffer = 1U;
+        bytesToRead = eusart1RxHead;
+        eusart1RxHead = 0;
+    }
+    NOP();
+    
     if(sizeof(eusart1RxBuffer) <= eusart1RxHead)
     {
         eusart1RxHead = 0;

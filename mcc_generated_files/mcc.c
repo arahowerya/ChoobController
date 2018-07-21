@@ -60,10 +60,10 @@ void SYSTEM_Initialize(void)
 
 void OSCILLATOR_Initialize(void)
 {
-    // SCS FOSC; IRCF 4MHz; IDLEN disabled; 
-    OSCCON = 0x60;
-    // INTSRC 31KHz; PLLEN disabled; TUN0 0; 
-    OSCTUNE = 0x00;
+    // SCS INTOSC; IRCF 4MHz; IDLEN disabled; 
+    OSCCON = 0x63;
+    // INTSRC 31KHz; PLLEN enabled; TUN0 0; 
+    OSCTUNE = 0x40;
     // ROSEL system_clock; ROON disabled; RODIV base_clock; ROSSLP disabled; 
     REFOCON = 0x00;
     // PRISD enabled; SOSCGO disabled; SOSCDRV enabled; 

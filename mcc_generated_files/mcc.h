@@ -55,7 +55,7 @@
 #include "eusart1.h"
 #include "eusart2.h"
 
-#define _XTAL_FREQ  32000000
+#define _XTAL_FREQ  4000000
 
 
 /**

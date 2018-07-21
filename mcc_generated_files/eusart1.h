@@ -54,7 +54,6 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -82,6 +81,9 @@ extern volatile uint8_t eusart1RxCount;
 /**
   Section: EUSART1 APIs
 */
+
+
+void readRxBuffer(uint8_t *outData);
 
 void (*EUSART1_TxDefaultInterruptHandler)(void);
 void (*EUSART1_RxDefaultInterruptHandler)(void);

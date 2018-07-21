@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: kilian
+ * Author: the lads
  *
  * Created on July 19, 2018, 8:43 PM
  */
@@ -17,11 +17,13 @@
  * 
  */
 
+uint8_t volatile readBuffer = 0;
+
 static struct Frame
 {
     uint8_t out_buf[10][10]; //7seg data
     
-    uint8_t in_buffer[100];
+    uint8_t in_buffer[200];
     
 }Frame;
 
@@ -46,11 +48,11 @@ void frame_init()
     }
     loadFrame();
 }
-uint8_t f = 0;
+
 void send_data()
 {
+    loadFrame();
     for(int row = 0; row < 8; row++)
-//    int row = 2;
     {
         while(!EUSART2_is_tx_ready())
         {
@@ -58,7 +60,7 @@ void send_data()
         }
 
 //        TXSTA2bits.TX9D = 1;
-        EUSART2_Write(row+1);
+        EUSART2_Write(8 - row);
 //        TXSTA2bits.TX9D = 0;
         for(int col = 0; col < 10; col ++)
         {      
@@ -66,7 +68,7 @@ void send_data()
             {
                 NOP();
             }
-            EUSART2_Write('0'+ f);//Frame.out_buf[row][col]);
+            EUSART2_Write(Frame.out_buf[row][col]);
         }
         while(!EUSART2_is_tx_ready())
         {
@@ -75,21 +77,35 @@ void send_data()
 //        __delay_ms(2);
     }
 }
-
+uint8_t bytesSend = 0;
 int main(int argc, char** argv)
 {
     SYSTEM_Initialize();
     __delay_ms(2000);
     frame_init();
-
+    
+    LATBbits.LATB5 = 0;
+    
+    /* Enable global and peripheral interrupts */
+    INTCONbits.GIE = 1;
+    INTCONbits.PEIE = 1;
     
     while(1)
     {
-        LATBbits.LATB5 = 1;   
-        LATBbits.LATB5 = 0;
-        send_data();
-        __delay_ms(80);
-        if(f++ >8)f =0;
+//        send_data();
+//        __delay_ms(80);
+//        if(f++ >8)f =0;
+//        Frame.in_buffer
+//        send_data();
+//        __delay_ms(80);
+        
+        if(readBuffer){
+            readBuffer = 0;
+            // read USART buffer
+            readRxBuffer(Frame.in_buffer);
+            send_data();
+        }
+        
     }
     return (EXIT_SUCCESS);
 }

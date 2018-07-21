@@ -68,8 +68,8 @@ void TMR1_Initialize(void)
     //T1GSS0 T1G_pin; TMR1GE disabled; T1GTM disabled; T1GPOL low; T1GGO done; T1GSPM disabled; 
     T1GCON = 0x00;
 
-    //TMR1H 224; 
-    TMR1H = 0xE0;
+    //TMR1H 252; 
+    TMR1H = 0xFC;
 
     //TMR1L 0; 
     TMR1L = 0x00;
